@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;800&family=Open+Sans:wght@400;600&display=swap');
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Open Sans', sans-serif;
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse 90% 55% at 50% 0%, #5090d8 0%, #2a60b8 30%, #1040a0 60%, #08204e 100%);
+  background-attachment: fixed;
+}
+
+/* ═══════════════════════════
+   NAV
+═══════════════════════════ */
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(5, 12, 30, 0.96);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  padding: 0 28px;
+  height: 42px;
+  gap: 0;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-right: 20px;
+}
+.nav-logo-img {
+  width: 50px; height: 50px;
+  object-fit: contain;
+}
+/* fallback icon if logo doesn't load */
+.nav-icon {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  border: 2px solid #4a90d0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; color: #4a90d0;
+  flex-shrink: 0;
+}
+
+.nav-brand-name {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 17px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  line-height: 1;
+}
+.nav-brand-accent {
+  color: #4a90d0;
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  flex: 1;
+}
+.nav-links a {
+  display: block;
+  padding: 0 14px;
+  height: 42px;
+  line-height: 42px;
+  color: #aac8e8;
+  text-decoration: none;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  transition: color .15s;
+}
+.nav-links a:hover { color: #fff; }
+
+.nav-right {
+  display: flex; align-items: center; gap: 14px; margin-left: auto;
+}
+.nav-search-btn {
+  background: none; border: none;
+  color: #aac8e8; cursor: pointer; font-size: 15px;
+  line-height: 1;
+}
+.nav-lang {
+  font-size: 12px; font-weight: 700;
+  color: #c8e0f8;
+  letter-spacing: 1px;
+}
+
+/* ═══════════════════════════
+   HEADER / TITLE BLOCK
+═══════════════════════════ */
+.page-header {
+  text-align: center;
+  padding: 36px 20px 20px;
+}
+.page-title {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: 10px;
+  text-transform: uppercase;
+  color: #ffffff;
+  text-shadow: 0 2px 20px rgba(80,160,255,0.35);
+  margin-bottom: 14px;
+}
+/* decorative divider  ──◆── */
+.title-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  margin: 0 auto 18px;
+  max-width: 340px;
+}
+.div-line {
+  flex: 1;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(160,210,255,0.7));
+}
+.div-line.right {
+  background: linear-gradient(90deg, rgba(160,210,255,0.7), transparent);
+}
+.div-dot {
+  width: 8px; height: 8px;
+  background: #90c8ff;
+  border-radius: 50%;
+  margin: 0 8px;
+  box-shadow: 0 0 10px rgba(140,200,255,0.8);
+}
+
+/* search row */
+.search-row {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+.search-box {
+  display: flex;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(160,210,255,0.35);
+  border-radius: 4px;
+  overflow: hidden;
+  width: 340px;
+}
+.search-box input {
+  flex: 1;
+  background: transparent;
+  border: none; outline: none;
+  color: #fff;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-family: 'Open Sans', sans-serif;
+}
+.search-box input::placeholder { color: rgba(200,225,255,0.5); }
+.search-box button {
+  background: rgba(80,140,220,0.4);
+  border: none; border-left: 1px solid rgba(160,210,255,0.3);
+  color: #c8e0ff;
+  padding: 0 12px;
+  cursor: pointer; font-size: 14px;
+}
+
+/* ═══════════════════════════
+   CATALOG WRAPPER
+═══════════════════════════ */
+.catalog-wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px 60px;
+}
+
+.page { display: none; }
+.page.active {
+  display: block;
+  animation: fadeUp .3s ease;
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ═══════════════════════════
+   GRID  —  3 columns
+═══════════════════════════ */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+/* ═══════════════════════════
+   CARD  —  WHITE
+═══════════════════════════ */
+.card {
+  background: #ffffff;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  box-shadow: 0 3px 14px rgba(0,0,0,0.22);
+  transition: transform .22s, box-shadow .22s;
+  display: flex;
+  flex-direction: column;
+}
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.32);
+}
+
+/* image area */
+.card-img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: #f4f6f8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-bottom: 1px solid #e8edf2;
+}
+.card-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  padding: 10px;
+}
+
+/* text body */
+.card-body {
+  padding: 11px 13px 14px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.card-brand {
+  font-size: 10px;
+  color: #2a72c8;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  margin-bottom: 4px;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+.card-title {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #1a2030;
+  line-height: 1.35;
+  margin-bottom: 6px;
+}
+.card-desc {
+  font-size: 11px;
+  color: #607080;
+  line-height: 1.5;
+  flex: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.card-price {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 15px;
+  font-weight: 800;
+  color: #1a55a0;
+  margin-top: 9px;
+}
+.card-price span {
+  font-size: 11px;
+  color: #8090a0;
+  font-weight: 400;
+  margin-left: 3px;
+}
+
+/* badges */
+.card-badge {
+  position: absolute;
+  top: 9px; right: 9px;
+  background: #0070cc;
+  color: #fff;
+  font-size: 9px; font-weight: 700;
+  padding: 3px 7px;
+  border-radius: 3px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  z-index: 2;
+}
+.card-badge.new  { background: #00a050; }
+.card-badge.sale { background: #d02020; }
+
+/* ═══════════════════════════
+   LOAD MORE / PAGINATION
+═══════════════════════════ */
+.load-more-wrap {
+  text-align: center;
+  margin-top: 40px;
+}
+.btn-load {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(180,220,255,0.5);
+  color: #d0eaff;
+  font-family: 'Exo 2', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 13px 48px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background .2s, border-color .2s, color .2s;
+}
+.btn-load:hover {
+  background: rgba(255,255,255,0.18);
+  border-color: rgba(180,220,255,0.9);
+  color: #fff;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+}
+.dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: rgba(180,220,255,0.3);
+  cursor: pointer;
+  transition: background .2s, transform .2s;
+}
+.dot.active {
+  background: #90c8ff;
+  transform: scale(1.4);
+}
+
+footer {
+  text-align: center;
+  padding: 22px;
+  color: rgba(180,220,255,0.55);
+  font-size: 11px;
+  letter-spacing: 1px;
+  border-top: 1px solid rgba(80,140,220,0.2);
+}
+</style>
+</head>
+<body>
+
+<!-- ===== NAV ===== -->
+<nav>
+  <div class="nav-brand">
+    <img src="file:///C:/Users/allom/%D0%A0%D0%BE%D0%B1%D0%BE%D1%87%D0%B8%D0%B9%20%D1%81%D1%82%D1%96%D0%BB/%D1%84%D0%BE%D1%82%D0%BA%D0%B8%20%D0%B4%D0%BB%D1%8F%20%D0%BA%D0%B0%D1%82%D0%B0%D0%BB%D0%BE%D0%B3%D1%83/%D0%BB%D0%BE%D0%B3%D0%BE%D1%82%D0%B8%D0%BF.png"
+         class="nav-logo-img"
+         onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+    <div class="nav-icon" style="display:none">⚡</div>
+    <span class="nav-brand-name">K <span class="nav-brand-accent">energy</span></span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#">Акції</a></li>
+    <li><a href="#">Головна</a></li>
+    <li><a href="#">Вітряні</a></li>
+    <li><a href="#">До теми</a></li>
+    <li><a href="#">Інвертори</a></li>
+    <li><a href="#">Послуги</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="nav-search-btn">🔍</button>
+    <div class="nav-lang">UA</div>
+  </div>
+</nav>
+
+<!-- ===== HEADER ===== -->
+<div class="page-header">
+  <div class="page-title">Каталог</div>
+  <div class="title-divider">
+    <div class="div-line"></div>
+    <div class="div-dot"></div>
+    <div class="div-line right"></div>
+  </div>
+  <div class="search-row">
+    <div class="search-box">
+      <input type="text" placeholder="Пошук...">
+      <button>🔍</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== CATALOG ===== -->
+<div class="catalog-wrap">
+
+  <!-- PAGE 1 -->
+  <div class="page active" id="page1">
+    <div class="grid">
+
+      <div class="card">
+        <div class="card-img"><img src="file:///C:/Users/allom/%D0%A0%D0%BE%D0%B1%D0%BE%D1%87%D0%B8%D0%B9%20%D1%81%D1%82%D1%96%D0%BB/%D1%84%D0%BE%D1%82%D0%BA%D0%B8%20%D0%B4%D0%BB%D1%8F%20%D0%BA%D0%B0%D1%82%D0%B0%D0%BB%D0%BE%D0%B3%D1%83/bander%20solar%20fich%20energy%20solar%20p200.png" alt="Bandera Solar"></div>
+        <div class="card-badge">Топ</div>
+        <div class="card-body">
+          <div class="card-brand">Bandera Solar / Rich Energy Solar</div>
+          <div class="card-title">Сонячна панель 7230 Вт</div>
+          <div class="card-desc">Монокристалічна сонячна панель для будинку та промислових об'єктів</div>
+          <div class="card-price">₴12 300 <span>/ шт</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img"><img src="file:///C:/Users/allom/%D0%A0%D0%BE%D0%B1%D0%BE%D1%87%D0%B8%D0%B9%20%D1%81%D1%82%D1%96%D0%BB/%D1%84%D0%BE%D1%82%D0%BA%D0%B8%20%D0%B4%D0%BB%D1%8F%20%D0%BA%D0%B0%D1%82%D0%B0%D0%BB%D0%BE%D0%B3%D1%83/bander%20solar%20fich%20energy%20solar%20p200.png" alt="Bandera Solar Premium"></div>
+        <div class="card-badge new">Новий</div>
+        <div class="card-body">
+          <div class="card-brand">Bandera Solar / Rich Energy Solar</div>
+          <div class="card-title">Сонячна панель 7230 Premium</div>
+          <div class="card-desc">Полікристалічна панель підвищеної ефективності 22.4%</div>
+          <div class="card-price">₴14 800 <span>/ шт</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img"><img src="file:///C:/Users/allom/%D0%A0%D0%BE%D0%B1%D0%BE%D1%87%D0%B8%D0%B9%20%D1%81%D1%82%D1%96%D0%BB/%D1%84%D0%BE%D1%82%D0%BA%D0%B8%20%D0%B4%D0%BB%D1%8F%20%D0%BA%D0%B0%D1%82%D0%B0%D0%BB%D0%BE%D0%B3%D1%83/%D0%BB%D1%96%D1%82%D1%96%D0%B9-%D1%96%D0%BE%D0%BD%D0%BD%D0%B8%D0%B9%20%D0%B0%D0%BA%D1%83%D0%BC%D1%83%D0%BB%D1%8F%D1%82%D0%BE%D1%80.png" alt="Акумулятор"></div>
+        <div class="card-body">
+          <div class="card-brand">Літій-іонний акумулятор</div>
+          <div class="card-title">Акумулятор LiFePO4 7230</div>
+          <div class="card-desc">Літій-залізо-фосфатний акумулятор для накопичення енергії</div>
+          <div class="card-price">₴9 500 <span>/ шт</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img"><img src="file:///C:/Users/allom/%D0%A0%D0%BE%D0%B1%D0%BE%D1%87%D0%B8%D0%B9%20%D1%81%D1%82%D1%96%D0%BB/%D1%84%D0%BE%D1%82%D0%BA%D0%B8%20%D0%B4%D0%BB%D1%8F%20%D0%BA%D0%B0%D1%82%D0%B0%D0%BB%D0%BE%D0%B3%D1%83/%D0%BD%D0%B0%D0%B1%D1%96%D1%80%20%D0%B5%D0%BB%D0%B5%D0%BA%D1%82%D1%80%D0%B8%D0%BA%D0%B0.png" alt="Набір електрика"></div>
+        <div class="card-body">
+          <div class="card-brand">Набір електрика</div>
+          <div class="card-title">Інструменти та кріплення</div>
+          <div class="card-desc">Повний набір для монтажу сонячних панелей та кабелів</div>
+          <div class="card-price">₴3 200 <span>/ набір</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img"><img src="file:///C:/Users/allom/%D0%A0%D0%BE%D0%B1%D0%BE%D1%87%D0%B8%D0%B9%20%D1%81%D1%82%D1%96%D0%BB/%D1%84%D0%BE%D1%82%D0%BA%D0%B8%20%D0%B4%D0%BB%D1%8F%20%D0%BA%D0%B0%D1%82%D0%B0%D0%BB%D0%BE%D0%B3%D1%83/%D0%91%D0%B5%D0%BD%D0%B7%D0%B8%D0%BD%D0%BE%D0%B2%D0%B8%D0%B9%20%D0%B3%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D1%82%D0%BE%D1%80%20kipor%20KGE6500E.png" alt="Генератор Kipor"></div>
+        <div class="card-badge sale">Акція</div>
+        <div class="card-body">
+          <div class="card-brand">Бензиновий генератор Kipor</div>
+          <div class="card-title">Генератор KGE6500E — 6.5 кВт з електрозапуском</div>
+          <div class="card-desc">Бензиновий генератор з AVR-регулятором та електростартом</div>
+          <div class="card-price">₴28 000 <span>/ шт</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img"><img src="file:///C:/Users/allom/%D0%A0%D0%BE%D0%B1%D0%BE%D1%87%D0%B8%D0%B9%20%D1%81%D1%82%D1%96%D0%BB/%D1%84%D0%BE%D1%82%D0%BA%D0%B8%20%D0%B4%D0%BB%D1%8F%20%D0%BA%D0%B0%D1%82%D0%B0%D0%BB%D0%BE%D0%B3%D1%83/bander%20solar%20fich%20energy%20solar%20p200.png" alt="Панель 400Вт"></div>
+        <div class="card-body">
+          <div class="card-brand">Bandera Solar / Rich Energy Solar</div>
+          <div class="card-title">Панель 400 Вт Mono PERC</div>
+          <div class="card-desc">Напівгнучка сонячна панель для мобільного застосування</div>
+          <div class="card-price">₴5 600 <span>/ шт</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img"><img src="file:///C:/Users/allom/%D0%A0%D0%BE%D0%B1%D0%BE%D1%87%D0%B8%D0%B9%20%D1%81%D1%82%D1%96%D0%BB/%D1%84%D0%BE%D1%82%D0%BA%D0%B8%20%D0%B4%D0%BB%D1%8F%20%D0%BA%D0%B0%D1%82%D0%B0%D0%BB%D0%BE%D0%B3%D1%83/%D0%BB%D1%96%D1%82%D1%96%D0%B9-%D1%96%D0%BE%D0%BD%D0%BD%D0%B8%D0%B9%20%D0%B0%D0%BA%D1%83%D0%BC%D1%83%D0%BB%D1%8F%D1%82%D0%BE%D1%80.png" alt="Акумулятор 200Ач"></div>
+        <div class="card-body">
+          <div class="card-brand">Літій-іонний акумулятор</div>
+          <div class="card-title">Акумулятор 200 Ач 48В</div>
+          <div class="card-desc">Стаціонарний акумулятор для сонячних електростанцій</div>
+          <div class="card-price">₴18 400 <span>/ шт</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img"><img src="file:///C:/Users/allom/%D0%A0%D0%BE%D0%B1%D0%BE%D1%87%D0%B8%D0%B9%20%D1%81%D1%82%D1%96%D0%BB/%D1%84%D0%BE%D1%82%D0%BA%D0%B8%20%D0%B4%D0%BB%D1%8F%20%D0%BA%D0%B0%D1%82%D0%B0%D0%BB%D0%BE%D0%B3%D1%83/%D0%BD%D0%B0%D0%B1%D1%96%D1%80%20%D0%B5%D0%BB%D0%B5%D0%BA%D1%82%D1%80%D0%B8%D0%BA%D0%B0.png" alt="Монтажний набір"></div>
+        <div class="card-badge new">Новий</div>
+        <div class="card-body">
+          <div class="card-brand">Набір електрика</div>
+          <div class="card-title">Монтажний набір Pro</div>
+          <div class="card-desc">Профільні кріплення для даху з нержавіючої сталі</div>
+          <div class="card-price">₴4 100 <span>/ набір</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img"><img src="file:///C:/Users/allom/%D0%A0%D0%BE%D0%B1%D0%BE%D1%87%D0%B8%D0%B9%20%D1%81%D1%82%D1%96%D0%BB/%D1%84%D0%BE%D1%82%D0%BA%D0%B8%20%D0%B4%D0%BB%D1%8F%20%D0%BA%D0%B0%D1%82%D0%B0%D0%BB%D0%BE%D0%B3%D1%83/%D0%91%D0%B5%D0%BD%D0%B7%D0%B8%D0%BD%D0%BE%D0%B2%D0%B8%D0%B9%20%D0%B3%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D1%82%D0%BE%D1%80%20kipor%20KGE6500E.png" alt="Генератор KOE8500E"></div>
+        <div class="card-body">
+          <div class="card-brand">Бензиновий генератор</div>
+          <div class="card-title">Генератор KOE8500E</div>
+          <div class="card-desc">Потужний чотиритактний генератор з AVR-регулятором</div>
+          <div class="card-price">₴32 500 <span>/ шт</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img"><img src="file:///C:/Users/allom/%D0%A0%D0%BE%D0%B1%D0%BE%D1%87%D0%B8%D0%B9%20%D1%81%D1%82%D1%96%D0%BB/%D1%84%D0%BE%D1%82%D0%BA%D0%B8%20%D0%B4%D0%BB%D1%8F%20%D0%BA%D0%B0%D1%82%D0%B0%D0%BB%D0%BE%D0%B3%D1%83/%D0%BD%D0%B0%D0%B1%D1%96%D1%80%20%D0%B5%D0%BB%D0%B5%D0%BA%D1%82%D1%80%D0%B8%D0%BA%D0%B0.png" alt="Кабель MC4"></div>
+        <div class="card-body">
+          <div class="card-brand">Набір електрика</div>
+          <div class="card-title">Кабель та конектори MC4</div>
+          <div class="card-desc">Сонячний кабель 4мм² + конектори MC4 для систем</div>
+          <div class="card-price">₴1 800 <span>/ комплект</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img"><img src="file:///C:/Users/allom/%D0%A0%D0%BE%D0%B1%D0%BE%D1%87%D0%B8%D0%B9%20%D1%81%D1%82%D1%96%D0%BB/%D1%84%D0%BE%D1%82%D0%BA%D0%B8%20%D0%B4%D0%BB%D1%8F%20%D0%BA%D0%B0%D1%82%D0%B0%D0%BB%D0%BE%D0%B3%D1%83/Forte%20FG3500E.png" alt="Forte FG3500E"></div>
+        <div class="card-badge sale">Акція</div>
+        <div class="card-body">
+          <div class="card-brand">Бензиновий генератор</div>
+          <div class="card-title">Forte FG3500E — 3.0 кВт</div>
+          <div class="card-desc">Компактний бензиновий генератор з електростартом для дому</div>
+          <div class="card-price">₴21 000 <span>/ шт</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img"><img src="file:///C:/Users/allom/%D0%A0%D0%BE%D0%B1%D0%BE%D1%87%D0%B8%D0%B9%20%D1%81%D1%82%D1%96%D0%BB/%D1%84%D0%BE%D1%82%D0%BA%D0%B8%20%D0%B4%D0%BB%D1%8F%20%D0%BA%D0%B0%D1%82%D0%B0%D0%BB%D0%BE%D0%B3%D1%83/bander%20solar%20fich%20energy%20solar%20p200.png" alt="Панель Industrial"></div>
+        <div class="card-body">
+          <div class="card-brand">Bandera Solar / Rich Energy Solar</div>
+          <div class="card-title">Панель 7230 Industrial</div>
+          <div class="card-desc">Промислова сонячна панель підвищеної міцності IP68</div>
+          <div class="card-price">₴16 200 <span>/ шт</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="load-more-wrap">
+      <button class="btn-load" onclick="goToPage2()">
+        <span>Завантажити ще</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+    </div>
+    <div class="pagination">
+      <div class="dot active" onclick="goToPage1()"></div>
+      <div class="dot" onclick="goToPage2()"></div>
+    </div>
+  </div>
+
+  <!-- PAGE 2 -->
+  <div class="page" id="page2">
+    <div class="grid">
+
+      <div class="card">
+        <div class="card-img"><img src="file:///C:/Users/allom/%D0%A0%D0%BE%D0%B1%D0%BE%D1%87%D0%B8%D0%B9%20%D1%81%D1%82%D1%96%D0%BB/%D1%84%D0%BE%D1%82%D0%BA%D0%B8%20%D0%B4%D0%BB%D1%8F%20%D0%BA%D0%B0%D1%82%D0%B0%D0%BB%D0%BE%D0%B3%D1%83/XPower%201000.png" alt="XPower 1030"></div>
+        <div class="card-badge new">Новий</div>
+        <div class="card-body">
+          <div class="card-brand">XPower</div>
+          <div class="card-title">XPower 1030 Зарядна станція</div>
+          <div class="card-desc">Портативна станція 1000 Вт·год, LiFePO4, USB-C 100W PD</div>
+          <div class="card-price">₴34 900 <span>/ шт</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img"><img src="file:///C:/Users/allom/%D0%A0%D0%BE%D0%B1%D0%BE%D1%87%D0%B8%D0%B9%20%D1%81%D1%82%D1%96%D0%BB/%D1%84%D0%BE%D1%82%D0%BA%D0%B8%20%D0%B4%D0%BB%D1%8F%20%D0%BA%D0%B0%D1%82%D0%B0%D0%BB%D0%BE%D0%B3%D1%83/MUST%20HB1800%20%2B%20PV18-5248%20-.png" alt="MUST HBP820"></div>
+        <div class="card-body">
+          <div class="card-brand">MUST</div>
+          <div class="card-title">MUST HBP820 + PVB-5240</div>
+          <div class="card-desc">Гібридний інвертор 8.2кВт з зарядним контролером MPPT</div>
+          <div class="card-price">₴58 000 <span>/ комплект</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img"><img src="file:///C:/Users/allom/%D0%A0%D0%BE%D0%B1%D0%BE%D1%87%D0%B8%D0%B9%20%D1%81%D1%82%D1%96%D0%BB/%D1%84%D0%BE%D1%82%D0%BA%D0%B8%20%D0%B4%D0%BB%D1%8F%20%D0%BA%D0%B0%D1%82%D0%B0%D0%BB%D0%BE%D0%B3%D1%83/Power%20Inverter%204000W.png" alt="Power Inverter HD5000W"></div>
+        <div class="card-badge">Топ</div>
+        <div class="card-body">
+          <div class="card-brand">Power Inverter</div>
+          <div class="card-title">Power Inverter HD5000W</div>
+          <div class="card-desc">Чистий синус 5000 Вт, 12/24/48В, ефективність 93%</div>
+          <div class="card-price">₴22 300 <span>/ шт</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img"><img src="file:///C:/Users/allom/%D0%A0%D0%BE%D0%B1%D0%BE%D1%87%D0%B8%D0%B9%20%D1%81%D1%82%D1%96%D0%BB/%D1%84%D0%BE%D1%82%D0%BA%D0%B8%20%D0%B4%D0%BB%D1%8F%20%D0%BA%D0%B0%D1%82%D0%B0%D0%BB%D0%BE%D0%B3%D1%83/Pilot%20BESS.png" alt="XPower 1260"></div>
+        <div class="card-body">
+          <div class="card-brand">XPower</div>
+          <div class="card-title">XPower 1260 Зарядна станція</div>
+          <div class="card-desc">Розширена станція 1260 Вт·год з сонячним входом 600W</div>
+          <div class="card-price">₴41 500 <span>/ шт</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img"><img src="file:///C:/Users/allom/%D0%A0%D0%BE%D0%B1%D0%BE%D1%87%D0%B8%D0%B9%20%D1%81%D1%82%D1%96%D0%BB/%D1%84%D0%BE%D1%82%D0%BA%D0%B8%20%D0%B4%D0%BB%D1%8F%20%D0%BA%D0%B0%D1%82%D0%B0%D0%BB%D0%BE%D0%B3%D1%83/MUST%20HB1800%20%2B%20PV18-5248%20-.png" alt="MUST HBP820 Pro"></div>
+        <div class="card-badge sale">Акція</div>
+        <div class="card-body">
+          <div class="card-brand">MUST</div>
+          <div class="card-title">MUST HBP820 + PVB-5240 Pro</div>
+          <div class="card-desc">Преміум комплект з моніторингом через додаток</div>
+          <div class="card-price">₴67 000 <span>/ комплект</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img"><img src="file:///C:/Users/allom/%D0%A0%D0%BE%D0%B1%D0%BE%D1%87%D0%B8%D0%B9%20%D1%81%D1%82%D1%96%D0%BB/%D1%84%D0%BE%D1%82%D0%BA%D0%B8%20%D0%B4%D0%BB%D1%8F%20%D0%BA%D0%B0%D1%82%D0%B0%D0%BB%D0%BE%D0%B3%D1%83/Power%20Inverter%204000W.png" alt="Power Inverter 4000W"></div>
+        <div class="card-body">
+          <div class="card-brand">Power Inverter</div>
+          <div class="card-title">Power Inverter 4000W</div>
+          <div class="card-desc">Модифікований синус 4000 Вт, захист від перевантаження</div>
+          <div class="card-price">₴14 800 <span>/ шт</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img"><img src="file:///C:/Users/allom/%D0%A0%D0%BE%D0%B1%D0%BE%D1%87%D0%B8%D0%B9%20%D1%81%D1%82%D1%96%D0%BB/%D1%84%D0%BE%D1%82%D0%BA%D0%B8%20%D0%B4%D0%BB%D1%8F%20%D0%BA%D0%B0%D1%82%D0%B0%D0%BB%D0%BE%D0%B3%D1%83/EnerSol%20%D0%B4%D0%B8%D0%B7%D0%B5%D0%BB%D1%8C%D0%BD%D0%B8%D0%B9%20%D0%B3%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D1%82%D0%BE%D1%80.png" alt="EnerSol"></div>
+        <div class="card-body">
+          <div class="card-brand">EnerSol</div>
+          <div class="card-title">EnerSol Дизельний генератор</div>
+          <div class="card-desc">Промисловий дизельний генератор 10 кВт з АВР</div>
+          <div class="card-price">₴95 000 <span>/ шт</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img"><img src="file:///C:/Users/allom/%D0%A0%D0%BE%D0%B1%D0%BE%D1%87%D0%B8%D0%B9%20%D1%81%D1%82%D1%96%D0%BB/%D1%84%D0%BE%D1%82%D0%BA%D0%B8%20%D0%B4%D0%BB%D1%8F%20%D0%BA%D0%B0%D1%82%D0%B0%D0%BB%D0%BE%D0%B3%D1%83/TOMZN%20TOVD1-60-EC.png" alt="TOKEN TDK"></div>
+        <div class="card-body">
+          <div class="card-brand">TOKEN</div>
+          <div class="card-title">TOKEN TDK/PDI-08</div>
+          <div class="card-desc">Контролер заряду MPPT 80А з Wi-Fi моніторингом</div>
+          <div class="card-price">₴8 700 <span>/ шт</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img"><img src="file:///C:/Users/allom/%D0%A0%D0%BE%D0%B1%D0%BE%D1%87%D0%B8%D0%B9%20%D1%81%D1%82%D1%96%D0%BB/%D1%84%D0%BE%D1%82%D0%BA%D0%B8%20%D0%B4%D0%BB%D1%8F%20%D0%BA%D0%B0%D1%82%D0%B0%D0%BB%D0%BE%D0%B3%D1%83/bander%20solar%20fich%20energy%20solar%20p200.png" alt="RIX SE38"></div>
+        <div class="card-badge new">Новий</div>
+        <div class="card-body">
+          <div class="card-brand">RIX SE38</div>
+          <div class="card-title">RIX SE38 Сонячна панель</div>
+          <div class="card-desc">Гнучка панель 380 Вт для яхт та автобудинків</div>
+          <div class="card-price">₴7 200 <span>/ шт</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img"><img src="file:///C:/Users/allom/%D0%A0%D0%BE%D0%B1%D0%BE%D1%87%D0%B8%D0%B9%20%D1%81%D1%82%D1%96%D0%BB/%D1%84%D0%BE%D1%82%D0%BA%D0%B8%20%D0%B4%D0%BB%D1%8F%20%D0%BA%D0%B0%D1%82%D0%B0%D0%BB%D0%BE%D0%B3%D1%83/GAMA%20100%20(G1Y.163.png" alt="DAMA генератор"></div>
+        <div class="card-body">
+          <div class="card-brand">DAMA</div>
+          <div class="card-title">DAMA 1GD /GX-100</div>
+          <div class="card-desc">Газовий генератор 10кВт з автозапуском та АВР</div>
+          <div class="card-price">₴78 500 <span>/ шт</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img"><img src="file:///C:/Users/allom/%D0%A0%D0%BE%D0%B1%D0%BE%D1%87%D0%B8%D0%B9%20%D1%81%D1%82%D1%96%D0%BB/%D1%84%D0%BE%D1%82%D0%BA%D0%B8%20%D0%B4%D0%BB%D1%8F%20%D0%BA%D0%B0%D1%82%D0%B0%D0%BB%D0%BE%D0%B3%D1%83/EcoFlow%20DELTA%20Pro%20Ultra.png" alt="EcoFlow DELTA Pro Ultra"></div>
+        <div class="card-badge">Топ</div>
+        <div class="card-body">
+          <div class="card-brand">EcoFlow DELTA Pro</div>
+          <div class="card-title">EcoFlow DELTA Pro Ultra</div>
+          <div class="card-desc">Домашня станція 6кВт·год розширювана до 90 кВт·год</div>
+          <div class="card-price">₴148 000 <span>/ шт</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img"><img src="file:///C:/Users/allom/%D0%A0%D0%BE%D0%B1%D0%BE%D1%87%D0%B8%D0%B9%20%D1%81%D1%82%D1%96%D0%BB/%D1%84%D0%BE%D1%82%D0%BA%D0%B8%20%D0%B4%D0%BB%D1%8F%20%D0%BA%D0%B0%D1%82%D0%B0%D0%BB%D0%BE%D0%B3%D1%83/%D0%9F%D0%BE%D1%80%D1%82%D0%B0%D1%82%D0%B8%D0%B2%D0%BD%D0%B0%20%D0%B7%D0%B0%D1%80%D1%8F%D0%B4%D0%BD%D0%B0%20%D1%81%D1%82%D0%B0%D0%BD%D1%86%D1%96%D1%8F%20EcoFlow%20DElTA%20Pro3.png" alt="EcoFlow DELTA Pro3"></div>
+        <div class="card-body">
+          <div class="card-brand">EcoFlow DELTA Pro</div>
+          <div class="card-title">Портативна зарядна станція EcoFlow DELTA Pro3</div>
+          <div class="card-desc">Портативна станція для дому та виїзду, потужність 3600 Вт</div>
+          <div class="card-price">₴112 000 <span>/ шт</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="load-more-wrap">
+      <button class="btn-load" onclick="goToPage1()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transform:rotate(180deg)"><polyline points="6 9 12 15 18 9"/></svg>
+        <span>На початок</span>
+      </button>
+    </div>
+    <div class="pagination">
+      <div class="dot" onclick="goToPage1()"></div>
+      <div class="dot active" onclick="goToPage2()"></div>
+    </div>
+  </div>
+
+</div>
+
+<footer>© 2026 K Energy Ukraine · Всі права захищено · м. Кропивницький</footer>
+
+<script>
+  function goToPage2() {
+    document.getElementById('page1').classList.remove('active');
+    document.getElementById('page2').classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  function goToPage1() {
+    document.getElementById('page2').classList.remove('active');
+    document.getElementById('page1').classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>
